@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IntelliWeb_Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #80deea);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 400px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-wrapper {
+      background: #e0e0e0;
+      height: 10px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      background:rgb(154, 84, 252);
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    #quiz.fade-out {
+      animation: fadeOut 0.4s forwards;
+    }
+
+    #quiz.fade-in {
+      animation: fadeIn 0.4s forwards;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .option {
+      background: #f1f1f1;
+      border: none;
+      padding: 12px;
+      margin: 10px 0;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .option:hover {
+      background-color: #b2ebf2;
+      transform: scale(1.02);
+    }
+
+    .btn {
+      background-color: #03a647;
+      color: white;
+      border: none;
+      padding: 12px;
+      margin-top: 20px;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #e4d34c;
+    }
+
+    .result {
+      font-size: 22px;
+      text-align: center;
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(20px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div class="progress-wrapper">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div id="quiz">
+      <h2 id="question">Loading...</h2>
+      <div id="options"></div>
+      <button class="btn" onclick="nextQuestion()">Next</button>
+    </div>
+    <div id="result" class="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "Web services were widely used in which environment?",
+        options: ["Mobile Computing", "Digital Computing", "Distributed computing", "All these"],
+        answer: "Distributed computing"
+      },
+      {
+        question: "Web service is used for which service?",
+        options: ["Host", "Run", "Compile", "Debug"],
+        answer: "Host"
+      },
+      {
+        question: "Rely on xml based messaging and operate through?",
+        options: ["WSDL", "VCCI", "XML", "ERP"],
+        answer: "WSDL"
+      },
+{
+        question: "Which type of webservice used the HTTP method?",
+        options: ["SOAP", "REST", "UDP", "FTP"],
+        answer: "REST"
+      },
+{
+        question: "What are the emergence of web service?",
+        options: ["Interoperability", "High reliability", "Resource sharing", "Service request"],
+        answer: "Interoperability"
+      },
+{
+        question: "Which architecture were client can communicate with server?",
+        options: ["Client-server", "Dumb terminals", "Thick client", "Thin client"],
+        answer: "Client-server"
+      },
+{
+        question: "Which client is a leight weight computer as software application?",
+        options: ["Thin", "Thick", "Dumb", "Server"],
+        answer: "Thin"
+      },
+{
+        question: "Which can be interact with server primarily for data storage and communication?",
+        options: ["Thin", "Thick", "Dumb", "Server"],
+        answer: "Thick"
+      },
+{
+        question: "An Software application that runs within web browser?",
+        options: ["Browserbased client", "Native Client", "Thick client", "Thin client"],
+        answer: "Browserbased client"
+      },
+{
+        question: "An Application which run an smartphone with their own code and UI?",
+        options: ["Browserbased client", "Mobile Client", "Thick client", "Thin client"],
+        answer: "Mobile Client"
+      },
+{
+        question: "The standardized ways for application to communicate over the internet?",
+        options: ["XML", "XSD", "WSDL", "UDDI"],
+        answer: "XML"
+      },
+{
+        question: "What is the primary purpose of XML?",
+        options: ["To style HTML documents","To store and transport data","To create hyperlinks","To generate videos"],
+        answer: "To store and transport data"
+      },
+{
+        question: "Which of the following is true about XML tags?",
+        options: ["Tags are optional","Tags must be properly nested","Tags can comtain spaces","Tags are case-insensitive"],
+        answer: "Tags must be properly nested"
+      },
+{
+        question: "What is a root element in XML?",
+        options: ["The first element of a document", "A special attribute", "The main container for all other element", "An optional features in xml"],
+        answer: "The main container for all other element"
+      },
+{
+        question: "Which character must be escaped in XML?",
+        options: ["@", "$", "&", "%"],
+        answer: "&"
+      },
+{
+        question: "Which syntax is correct for an empty elements in XML?",
+        options: ["<empty>", "<empty></empty>", "<empty/>", "</empty>"],
+        answer: "<empty/>"
+      },
+{
+        question: "What is the role of CDATA in XML?",
+        options: ["Store comments", "Include raw data without parsing", "Define attributes'", "Create namespaces"],
+        answer: "Include raw data without parsing"
+      },
+{
+        question: "What is the advantage of XML over JSON?",
+        options: ["Conciseness", "Built-in data types", "Strong scheme support", "Faster processing"],
+        answer: "Strong scheme support"
+      },
+{
+        question: "What does a well-formed XML document means?",
+        options: ["JSON Schema", "XML Schema(XSD)", "CSV", "YAML"],
+        answer: "XML Schema(XSD)"
+      },
+{
+        question: "What is a significant limitation of XML compared to JSON?",
+        options: ["Lack of schema support", "Verbose syntax", "No support for hierarchical structures", "Cannot be validated"],
+        answer: "Verbose syntax"
+      },
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let selectedOption = null;
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const resultEl = document.getElementById("result");
+    const quizEl = document.getElementById("quiz");
+    const progressBar = document.getElementById("progressBar");
+
+    function updateProgressBar() {
+      const percent = ((currentQuestion) / quizData.length) * 100;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    function loadQuestion() {
+      updateProgressBar();
+
+      const q = quizData[currentQuestion];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
+      selectedOption = null;
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option";
+        btn.addEventListener("click", function () {
+          selectedOption = this.textContent;
+          document.querySelectorAll(".option").forEach(o => o.style.background = "#f1f1f1");
+          this.style.background = "#b2ebf2";
+        });
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    function nextQuestion() {
+      if (!selectedOption) {
+        alert("Please select an option.");
+        return;
+      }
+
+      if (selectedOption === quizData[currentQuestion].answer) {
+        score++;
+      }
+
+      quizEl.classList.add("fade-out");
+
+      setTimeout(() => {
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+          loadQuestion();
+          quizEl.classList.remove("fade-out");
+          quizEl.classList.add("fade-in");
+          setTimeout(() => quizEl.classList.remove("fade-in"), 400);
+        } else {
+          updateProgressBar(); // 100%
+          quizEl.style.display = "none";
+          resultEl.style.display = "block";
+          resultEl.textContent = `🎉 You scored ${score} out of ${quizData.length}`;
+          resultE1.textContent = `CONGRATULATIONS`;
+        }
+      }, 400);
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
